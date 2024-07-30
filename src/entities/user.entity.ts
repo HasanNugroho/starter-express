@@ -27,6 +27,9 @@ export class User {
   isActive!: boolean;
 
   @CreateDateColumn({ type: 'timestamp' })
+  lastLoginAt!: Date;
+
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt!: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })

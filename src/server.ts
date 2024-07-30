@@ -5,10 +5,6 @@ import logger from './core/logger'; // Import the default logger instance
 
 export const startServer = async (app: Express) => {
   try {
-    // Initialize the database connection
-    const database = new Database();
-    await database.initDatabase();
-
     // Start Apollo Server
     const serverConfig = new ApolloServerConfig();
     await serverConfig.start();
@@ -22,5 +18,6 @@ export const startServer = async (app: Express) => {
     });
   } catch (error) {
     logger.error('Error initializing server:', error);
+    process.exit(1);
   }
 };

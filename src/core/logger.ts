@@ -5,9 +5,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Define the logger configuration
-const logFormat = process.env.LOG_FORMAT === 'json' ? winston.format.json() : winston.format.combine(
+const logFormat = winston.format.combine(
   winston.format.colorize(),
   winston.format.timestamp(),
+  winston.format.json(),
   winston.format.printf(({ timestamp, level, message }) => 
     `${timestamp} [${level}]: ${message}`
   )
