@@ -1,9 +1,10 @@
 import 'reflect-metadata';
-import express from 'express';
+import express, { NextFunction } from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import { startServer } from './server';
 import { Database } from './core/db';
+import { errorHandler } from './middleware/errors.middleware';
 
 dotenv.config();
 
@@ -12,6 +13,10 @@ const app = express();
 // Middleware configuration
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+
+// Error handling
+app.use(errorHandler);
 
 // Function to initialize and start the server
 async function initializeAndStartServer() {

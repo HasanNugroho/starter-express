@@ -17,7 +17,7 @@ type UserMutation {
     email: String!
     name: String!
     passwordRaw: String
-  ): UserResponse
+  ): Response<UserMinimal>
 }
 
 # Define the UserMinimal type
@@ -32,10 +32,10 @@ type UserMinimal {
 }
 
 # Define the UserResponse type
-type UserResponse {
+type Response<Schema> {
   success: Boolean!
   message: String
-  user: UserMinimal
+  data: Schema
 }
 
 # Define custom scalar Date

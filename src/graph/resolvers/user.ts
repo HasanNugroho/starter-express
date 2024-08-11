@@ -1,5 +1,13 @@
+import 'reflect-metadata';
 import { GraphQLResolveInfo } from 'graphql';
-import { generateSuccess } from '../../helper/graph';
+import { generateError, generateSuccess } from '../../helper/graph';
+import { UserService } from '../../services/user.service';
+import { container } from 'tsyringe';
+import { validationPipe } from '../../common/pipes/validation.pipe';
+import { UserCreateDTO } from '../../dto/users.dto';
+import { BadRequestError, CustomError, ServerError } from '../../helper/errors';
+
+const userService = container.resolve(UserService);
 
 const userResolvers = {
   Query: {
@@ -14,17 +22,32 @@ const userResolvers = {
   },
   UserQuery: {
     async list() {
-      return {}
-    }
+      return {};
+    },
   },
   UserMutation: {
     async create(
-      parent: any,
-      args: { email: string; name: string; passwordRaw?: string },
-      context: any,
-      info: GraphQLResolveInfo
+      args: { input: { name: string; email: string; password: string } },
+      context: any
     ) {
-      return generateSuccess('User created successfully')
+      try {
+        const { input } = args;
+        const { err, errors } = await validationPipe(UserCreateDTO, input, [
+          'initial',
+          'typecast',
+        ]);
+        if (err) {
+          throw new BadRequestError("Bad Request", errors);
+        }
+        await userService.create(input);
+        return generateSuccess('User created successfully');
+      } catch (error) {
+        if (error instanceof CustomError) {
+          return generateError(error);
+        } else {
+          return generateError(new ServerError('An unexpected error occurred.'));
+        }
+      }
     },
   },
 };
