@@ -1,12 +1,7 @@
-// ApolloServerConfig.ts
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { resolvers, typeDefs } from '../graph';
 import logger from './logger';
-
-interface ConnectionParams {
-  // Define the expected shape of connectionParams if needed
-}
 
 export class ApolloServerConfig {
   private server: ApolloServer;

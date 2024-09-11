@@ -1,4 +1,3 @@
-# Define base Query and Mutation types
 type Query {
   users: UserQuery
 }
@@ -7,7 +6,6 @@ type Mutation {
   users: UserMutation
 }
 
-# Define the UserQuery type
 type UserQuery {
   list: [UserMinimal]
 }
@@ -17,10 +15,9 @@ type UserMutation {
     email: String!
     name: String!
     passwordRaw: String
-  ): Response<UserMinimal>
+  ): UserResponse
 }
 
-# Define the UserMinimal type
 type UserMinimal {
   id: ID
   name: String
@@ -31,12 +28,10 @@ type UserMinimal {
   updatedAt: Date
 }
 
-# Define the UserResponse type
-type Response<Schema> {
+type UserResponse {
   success: Boolean!
   message: String
-  data: Schema
+  data: UserMinimal
 }
 
-# Define custom scalar Date
 scalar Date

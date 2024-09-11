@@ -1,6 +1,5 @@
-import { Database } from './core/db';
 import { ApolloServerConfig } from './core/graph';
-import express, { Express } from 'express';
+import { Express } from 'express';
 import logger from './core/logger'; // Import the default logger instance
 
 export const startServer = async (app: Express) => {

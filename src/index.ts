@@ -5,6 +5,8 @@ import bodyParser from 'body-parser';
 import { startServer } from './server';
 import { Database } from './core/db';
 import { errorHandler } from './middleware/errors.middleware';
+import cors from 'cors';
+import { options } from './core/cors';
 
 dotenv.config();
 
@@ -14,6 +16,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.use(cors(options));
 
 // Error handling
 app.use(errorHandler);

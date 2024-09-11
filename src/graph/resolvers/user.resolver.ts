@@ -4,7 +4,7 @@ import { generateError, generateSuccess } from '../../helper/graph';
 import { UserService } from '../../services/user.service';
 import { container } from 'tsyringe';
 import { validationPipe } from '../../common/pipes/validation.pipe';
-import { UserCreateDTO } from '../../dto/users.dto';
+import { UserMinimalDTO } from '../../dto/users.dto';
 import { BadRequestError, CustomError, ServerError } from '../../helper/errors';
 
 const userService = container.resolve(UserService);
@@ -32,12 +32,12 @@ const userResolvers = {
     ) {
       try {
         const { input } = args;
-        const { err, errors } = await validationPipe(UserCreateDTO, input, [
+        const { err, errors } = await validationPipe(UserMinimalDTO, input, [
           'initial',
           'typecast',
         ]);
         if (err) {
-          throw new BadRequestError("Bad Request", errors);
+          throw new BadRequestError('Bad Request', errors);
         }
         await userService.create(input);
         return generateSuccess('User created successfully');
@@ -45,7 +45,9 @@ const userResolvers = {
         if (error instanceof CustomError) {
           return generateError(error);
         } else {
-          return generateError(new ServerError('An unexpected error occurred.'));
+          return generateError(
+            new ServerError('An unexpected error occurred.')
+          );
         }
       }
     },

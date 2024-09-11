@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   IsEmail,
   IsNotEmpty,
@@ -5,7 +6,7 @@ import {
   IsStrongPassword,
 } from 'class-validator';
 
-export class UserCreateDTO {
+export class UserMinimalDTO {
   @IsString()
   @IsNotEmpty()
   name!: string;
@@ -16,5 +17,6 @@ export class UserCreateDTO {
 
   @IsStrongPassword()
   @IsNotEmpty()
+  @Exclude()
   password!: string;
 }
