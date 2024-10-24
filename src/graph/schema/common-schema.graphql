@@ -17,7 +17,7 @@ type ResponseStatus {
 
 type PaginationInfo {
   total: Int!
-  page: Int!
+  currentPage: Int!
   totalPages: Int!
   pageSize: Int!
 }

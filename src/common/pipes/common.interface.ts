@@ -1,6 +1,6 @@
 interface PaginationInfo {
     total: number;
-    page: number;
+    currentPage: number;
     pageSize: number;
     totalPages: number;
 }
