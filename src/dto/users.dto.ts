@@ -17,6 +17,5 @@ export class UserMinimalDTO {
 
   @IsStrongPassword()
   @IsNotEmpty()
-  @Exclude()
   password!: string;
 }

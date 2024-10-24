@@ -1,19 +1,19 @@
 import { UserDao } from '../dao/users.dao';
 import { UserMinimalDTO } from '../dto/users.dto';
 import { User } from '../entities/user.entity';
-import jwt from 'jsonwebtoken';
 import { inject, injectable } from 'tsyringe';
-import { BadRequestError } from '../helper/errors';
+import { BadRequestError, NotFoundException } from '../helper/errors';
+import { generatePagination } from '../common/pipes/pagination';
 
 @injectable()
 export class UserService {
-  constructor(@inject(UserDao) private userDao: UserDao) {}
+  constructor(@inject(UserDao) private userDao: UserDao) { }
 
   async create(payload: UserMinimalDTO): Promise<User> {
     try {
       const isExistUser = await this.userDao.getByEmail(payload.email);
       if (isExistUser) throw new BadRequestError('User with email already exist.');
-      
+
       const user = await this.userDao.create(payload);
       return user;
     } catch (e) {
@@ -21,17 +21,19 @@ export class UserService {
     }
   }
 
-  async refreshToken(user: User): Promise<{ user: User; token: string }> {
-    return {
-      token: jwt.sign(
-        {
-          userId: user.id,
-          email: user.email,
-        },
-        'secretkeyappearshere',
-        { expiresIn: '1h' }
-      ),
-      user,
-    };
+  async getAll(fields: (keyof User)[], search?: string, page: number = 1, limit: number = 10) {
+    try {
+      const [items, total] = await this.userDao.getAll(fields, search, page, limit)
+
+      if (total === 0) throw new NotFoundException();
+
+      return {
+        data: items,
+        pagination: generatePagination(total, page, limit)
+      }
+
+    } catch (e) {
+      throw e;
+    }
   }
 }

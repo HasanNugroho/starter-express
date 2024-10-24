@@ -3,44 +3,71 @@ import { GraphQLResolveInfo } from 'graphql';
 import { generateError, generateSuccess } from '../../helper/graph';
 import { UserService } from '../../services/user.service';
 import { container } from 'tsyringe';
-import { validationPipe } from '../../common/pipes/validation.pipe';
+import { validator } from '../../common/pipes/validation.pipe';
 import { UserMinimalDTO } from '../../dto/users.dto';
 import { BadRequestError, CustomError, ServerError } from '../../helper/errors';
+import { fieldsList, fieldsMap } from 'graphql-fields-list';
+import { User } from '../../entities/user.entity';
 
 const userService = container.resolve(UserService);
 
 const userResolvers = {
   Query: {
-    async users() {
+    users: () => {
       return {};
     },
   },
   Mutation: {
-    async users() {
+    user: () => {
       return {};
     },
   },
   UserQuery: {
-    async list() {
-      return {};
+    async list(
+      _: any,
+      args: { search?: string, page?: number, limit?: number },
+      context: any,
+      info: GraphQLResolveInfo
+    ) {
+      try {
+        const input = args;
+        const fields = fieldsList(info, { path: 'data' }) as (keyof User)[];
+
+        const users = await userService.getAll(fields, input.search, input.page, input.limit);
+
+        return users
+      } catch (error) {
+        if (error instanceof CustomError) {
+          return generateError(error);
+        } else {
+          return generateError(
+            new ServerError('An unexpected error occurred.')
+          );
+        }
+      }
     },
   },
   UserMutation: {
     async create(
-      args: { input: { name: string; email: string; password: string } },
-      context: any
+      _: any,
+      args: { email: string; name: string; password: string },
+      context: any,
+      info: GraphQLResolveInfo
     ) {
       try {
-        const { input } = args;
-        const { err, errors } = await validationPipe(UserMinimalDTO, input, [
-          'initial',
-          'typecast',
-        ]);
-        if (err) {
-          throw new BadRequestError('Bad Request', errors);
-        }
-        await userService.create(input);
-        return generateSuccess('User created successfully');
+        const input = args;
+
+        // Validate input using DTO
+        const { err, errors } = await validator(UserMinimalDTO, input);
+
+        if (err) throw new BadRequestError('Bad Request', errors);
+
+        const user = await userService.create(input);
+
+        return {
+          user,
+          responseResult: generateSuccess('User created successfully')
+        };
       } catch (error) {
         if (error instanceof CustomError) {
           return generateError(error);

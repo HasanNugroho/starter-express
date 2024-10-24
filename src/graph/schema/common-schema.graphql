@@ -1,0 +1,31 @@
+# Scalar Types
+scalar JSON
+
+# ===============================================
+# RESPONSE STATUS
+# ===============================================
+
+type ResponseStatus {
+  statusCode: Int
+  message: String
+  detail: JSON
+}
+
+# ===============================================
+# PAGINATION INFO
+# ===============================================
+
+type PaginationInfo {
+  total: Int!
+  page: Int!
+  totalPages: Int!
+  pageSize: Int!
+}
+
+# ===============================================
+# DEFAULT RESPONSE
+# ===============================================
+
+type DefaultResponse {
+  responseResult: ResponseStatus
+}

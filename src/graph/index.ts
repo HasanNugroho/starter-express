@@ -6,7 +6,7 @@ import { GraphQLSchema } from 'graphql';
 
 // Define your directories
 const schemaDir = path.join(__dirname, './schema');
-const resolversDir = path.join(__dirname, 'resolvers');
+const resolversDir = path.join(__dirname, '/resolvers');
 
 // Load type definitions
 const typesArray = loadFilesSync(schemaDir, { extensions: ['graphql'] });

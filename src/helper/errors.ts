@@ -12,7 +12,7 @@ export abstract class CustomError extends Error {
   abstract status: string;
   protected defaultMessage: string = 'An error occurred'; // Provide a default value
 
-  protected data?: any; // Optional field for additional error data
+  public data?: any; // Optional field for additional error data
 
   constructor(message?: string, data?: any) {
     super(message || 'An error occurred'); // Use a default message if none provided
