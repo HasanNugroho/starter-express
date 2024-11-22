@@ -1,11 +1,11 @@
 import 'reflect-metadata';
 import { GraphQLResolveInfo } from 'graphql';
-import { generateError, generateSuccess } from '../../helper/graph';
+import { generateError, generateSuccess } from '../../common/graph';
 import { UserService } from '../../services/user.service';
 import { container } from 'tsyringe';
 import { validator } from '../../common/pipes/validation.pipe';
 import { UserMinimalDTO } from '../../dto/users.dto';
-import { BadRequestError, CustomError, ServerError } from '../../helper/errors';
+import { BadRequestError, CustomError, ServerError } from '../../common/errors';
 import { fieldsList, fieldsMap } from 'graphql-fields-list';
 import { User } from '../../entities/user.entity';
 

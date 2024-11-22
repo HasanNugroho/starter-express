@@ -2,8 +2,8 @@ import { UserDao } from '../dao/users.dao';
 import { UserMinimalDTO } from '../dto/users.dto';
 import { User } from '../entities/user.entity';
 import { inject, injectable } from 'tsyringe';
-import { BadRequestError, NotFoundException } from '../helper/errors';
-import { generatePagination } from '../common/pipes/pagination';
+import { BadRequestError, NotFoundException } from '../common/errors';
+import { generatePagination } from '../common/pagination';
 
 @injectable()
 export class UserService {

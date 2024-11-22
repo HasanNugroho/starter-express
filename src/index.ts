@@ -7,6 +7,7 @@ import { Database } from './core/db';
 import { errorHandler } from './middleware/errors.middleware';
 import cors from 'cors';
 import { options } from './core/cors';
+import { securityMiddleware } from './middleware/security.middleware';
 
 dotenv.config();
 
@@ -16,7 +17,11 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// Cors
 app.use(cors(options));
+
+// Security
+app.use(securityMiddleware)
 
 // Error handling
 app.use(errorHandler);

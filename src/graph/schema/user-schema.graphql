@@ -2,7 +2,7 @@
 # USERS
 # ===============================================
 
-type Query {
+type Query @rateLimit(limit: 60, duration: 60) {
   users: UserQuery
 }
 
@@ -15,12 +15,9 @@ type Mutation {
 # -----------------------------------------------
 
 type UserQuery {
-  list(
-    search: String
-    page: Int
-    limit: Int
-  ): UserListResponse
+  list(search: String, page: Int, limit: Int): UserListResponse
 }
+
 
 # -----------------------------------------------
 # MUTATIONS
