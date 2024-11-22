@@ -1,24 +1,19 @@
 import _ from 'lodash';
+import { CustomError } from './errors';
 
-export interface CustomError extends Error {
-  code?: number;
-}
-
-export const generateSuccess = (msg: string) => {
+export const generateSuccess = (msg: string, data?: any[] | any) => {
   return {
-    succeeded: true,
-    errorCode: 0,
-    slug: 'ok',
+    statusCode: 200,
     message: _.defaultTo(msg, 'Operation succeeded.'),
+    data: data ?? null
   };
 };
 
 export const generateError = (err: CustomError, complete = true) => {
   const error = {
-    succeeded: false,
-    errorCode: _.isFinite(err.code) ? err.code : 1,
-    slug: err.name,
+    statusCode: err.statusCode,
     message: err.message || 'An unexpected error occurred.',
+    detail: err.data
   };
   return complete ? { responseResult: error } : error;
 };

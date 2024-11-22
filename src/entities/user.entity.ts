@@ -1,15 +1,16 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  PrimaryColumn,
 } from 'typeorm';
+import { v7 as uuidv7 } from 'uuid';
 
 @Entity({ name: 'users' })
 export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
+  @PrimaryColumn('char', { length: 36 })
+  id: string = uuidv7();
 
   @Column({ type: 'varchar', length: 255, unique: true })
   email!: string;
@@ -21,17 +22,17 @@ export class User {
   password!: string;
 
   @Column({ type: 'boolean', default: false })
-  isSystem!: boolean;
+  is_system!: boolean;
 
   @Column({ type: 'boolean', default: true })
-  isActive!: boolean;
+  is_active!: boolean;
 
   @CreateDateColumn({ type: 'timestamp' })
-  lastLoginAt!: Date;
+  last_login_at!: Date;
 
   @CreateDateColumn({ type: 'timestamp' })
-  createdAt!: Date;
+  created_at!: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
-  updatedAt!: Date;
+  updated_at!: Date;
 }

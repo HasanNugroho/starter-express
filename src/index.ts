@@ -1,9 +1,13 @@
 import 'reflect-metadata';
-import express from 'express';
+import express, { NextFunction } from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import { startServer } from './server';
 import { Database } from './core/db';
+import { errorHandler } from './middleware/errors.middleware';
+import cors from 'cors';
+import { options } from './core/cors';
+import { securityMiddleware } from './middleware/security.middleware';
 
 dotenv.config();
 
@@ -12,6 +16,15 @@ const app = express();
 // Middleware configuration
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+// Cors
+app.use(cors(options));
+
+// Security
+app.use(securityMiddleware)
+
+// Error handling
+app.use(errorHandler);
 
 // Function to initialize and start the server
 async function initializeAndStartServer() {

@@ -1,19 +1,43 @@
-import { Database } from './core/db';
-import { ApolloServerConfig } from './core/graph';
-import express, { Express } from 'express';
-import logger from './core/logger'; // Import the default logger instance
+import { Express } from 'express';
+import http from 'http';
+import cors from 'cors';
+import logger from './core/logger';
+import bodyParser from 'body-parser';
+import redisClient from './core/redis';
+import schema from './graph';
+import { ApolloServer } from '@apollo/server';
+import { expressMiddleware } from '@apollo/server/express4';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 
+// start service
 export const startServer = async (app: Express) => {
   try {
-    // Start Apollo Server
-    const serverConfig = new ApolloServerConfig();
-    await serverConfig.start();
+    const port = process.env.PORT ? Number(process.env.PORT) : 5000;
+    const host = process.env.HOST ?? 'localhost';
 
-    // Start the Express app
-    const port = Number(process.env.PORT) || 5000;
-    const host = process.env.HOST || 'localhost';
+    const httpServer = http.createServer(app);
 
-    app.listen(port, () => {
+    // start graphql
+    const server = new ApolloServer({
+      schema: schema,
+      plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    });
+    await server.start();
+
+    app.use(
+      '/graphql',
+      cors(),
+      bodyParser.json(),
+      expressMiddleware(server, {
+        context: async ({ req }) => ({
+          ip: req.ip,
+          token: req.headers.authorization || '',
+        }),
+      })
+    );
+
+    // start http
+    httpServer.listen(port, () => {
       logger.info(`Server running at http://${host}:${port}`);
     });
   } catch (error) {

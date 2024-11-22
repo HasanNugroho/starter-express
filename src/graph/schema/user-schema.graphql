@@ -1,0 +1,63 @@
+# ===============================================
+# USERS
+# ===============================================
+
+type Query @rateLimit(limit: 60, duration: 60) {
+  users: UserQuery
+}
+
+type Mutation {
+  user: UserMutation
+}
+
+# -----------------------------------------------
+# QUERIES
+# -----------------------------------------------
+
+type UserQuery {
+  list(search: String, page: Int, limit: Int): UserListResponse
+}
+
+
+# -----------------------------------------------
+# MUTATIONS
+# -----------------------------------------------
+
+type UserMutation {
+  create(
+    email: String!
+    name: String!
+    password: String
+  ): UserResponse
+}
+
+# -----------------------------------------------
+# RESPONSES
+# -----------------------------------------------
+
+type UserListResponse {
+  data: [UserMinimal]
+  pagination: PaginationInfo
+}
+
+type UserResponse {
+  responseResult: ResponseStatus,
+  user: UserMinimal
+}
+
+
+# -----------------------------------------------
+# TYPES
+# -----------------------------------------------
+
+type UserMinimal {
+  id: ID!
+  name: String!
+  email: String!
+  is_system: Boolean
+  is_active: Boolean
+  created_at: Date
+  updated_at: Date
+}
+
+scalar Date
