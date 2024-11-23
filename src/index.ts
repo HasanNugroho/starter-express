@@ -8,10 +8,12 @@ import { errorHandler } from './middleware/errors.middleware';
 import cors from 'cors';
 import { options } from './core/cors';
 import { securityMiddleware } from './middleware/security.middleware';
+import helmet from 'helmet';
 
 dotenv.config();
 
 const app = express();
+const database = new Database();
 
 // Middleware configuration
 app.use(bodyParser.json());
@@ -21,6 +23,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors(options));
 
 // Security
+app.use(helmet())
 app.use(securityMiddleware)
 
 // Error handling
@@ -35,6 +38,18 @@ async function initializeAndStartServer() {
   // Start the server with the created Express app
   startServer(app);
 }
+
+process.on('SIGINT', async () => {
+  console.log('Shutting down server...');
+  await database.closeDatabaseConnection();
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  console.log('Shutting down server...');
+  await database.closeDatabaseConnection();
+  process.exit(0);
+});
 
 // Call the function to initialize and start the server
 initializeAndStartServer().catch((err) => {

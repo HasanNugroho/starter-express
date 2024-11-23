@@ -33,5 +33,4 @@ let schema: GraphQLSchema = makeExecutableSchema({
 });
 schema = rateLimitDirectiveTransformer(schema);
 
-
 export default schema 

@@ -1,27 +1,29 @@
-import { Request, NextFunction, Response } from "express"
+import { Request, Response, NextFunction } from "express";
 
 export const securityMiddleware = (req: Request, res: Response, next: NextFunction) => {
     // -> Disable X-Powered-By
-    req.app.disable('x-powered-by')
+    req.app.disable('x-powered-by');
 
     // -> Disable Frame Embedding
-    if (!process.env.IFRAME) {
-        res.set('X-Frame-Options', 'deny')
-    }
+    const iframePolicy = process.env.IFRAME_POLICY || 'deny'; // default: deny
+    res.set('X-Frame-Options', iframePolicy);
 
-    // -> Re-enable XSS Fitler if disabled
-    res.set('X-XSS-Protection', '1; mode=block')
+    // -> Re-enable XSS Filter if disabled
+    res.set('X-XSS-Protection', '1; mode=block');
 
     // -> Disable MIME-sniffing
-    res.set('X-Content-Type-Options', 'nosniff')
+    res.set('X-Content-Type-Options', 'nosniff');
 
     // -> Disable IE Compatibility Mode
-    res.set('X-UA-Compatible', 'IE=edge')
+    res.set('X-UA-Compatible', 'IE=edge');
 
-    // -> Disables referrer header when navigating to a different origin
-    if (!process.env.REFERRER_POLICY) {
-        res.set('Referrer-Policy', 'same-origin')
-    }
+    // -> Referrer Policy
+    const referrerPolicy = process.env.REFERRER_POLICY || 'strict-origin-when-cross-origin';
+    res.set('Referrer-Policy', referrerPolicy);
 
-    return next()
-}
+    // -> Content Security Policy (CSP)
+    const cspDirectives = process.env.CSP_DIRECTIVES || "default-src 'self'";
+    res.set('Content-Security-Policy', cspDirectives);
+
+    return next();
+};

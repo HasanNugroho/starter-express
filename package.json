@@ -17,7 +17,8 @@
     "migration:generate": "npx typeorm-ts-node-commonjs migration:generate ./src/db/migrations/schema-update -d ./src/db/data-source.ts",
     "migration:show": "npx typeorm-ts-node-commonjs migration:show -d ./src/db/data-source.ts",
     "migration:run": "npx typeorm-ts-node-commonjs migration:run -d  ./src/db/data-source.ts",
-    "migration:revert": "npx typeorm-ts-node-commonjs migration:revert -d ./src/db/data-source.ts"
+    "migration:revert": "npx typeorm-ts-node-commonjs migration:revert -d ./src/db/data-source.ts",
+    "generate:module": "ts-node ./generate-module.ts"
   },
   "keywords": [],
   "author": "",
@@ -36,8 +37,8 @@
     "express": "^4.19.2",
     "graphql": "^16.9.0",
     "graphql-fields-list": "^2.2.4",
-    "graphql-rate-limit": "^3.3.0",
     "graphql-rate-limit-directive": "^2.0.5",
+    "helmet": "^8.0.0",
     "http-status-codes": "^2.3.0",
     "ioredis": "^5.4.1",
     "jsonwebtoken": "^9.0.2",
