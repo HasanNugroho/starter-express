@@ -15,10 +15,10 @@ let connectionOptions: DataSourceOptions = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   entities: [
-    path.join(__dirname, process.env.NODE_ENV === 'production' ? 'dist/entities/*.entity.js' : 'src/entities/*.entity.ts')
+    path.join(__dirname, isProduction ? '../dist/entities/*.entity.js' : '../entities/*.entity.ts')
   ],
   migrations: [
-    path.join(__dirname, process.env.NODE_ENV === 'production' ? 'dist/db/migrations/*.js' : 'src/db/migrations/*.ts')
+    path.join(__dirname, isProduction ? '../dist/db/migrations/*.js' : './migrations/*.ts')
   ],
   synchronize: false,
   logging: !isProduction,

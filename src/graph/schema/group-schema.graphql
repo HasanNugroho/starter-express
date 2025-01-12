@@ -1,0 +1,52 @@
+# ===============================================
+# GROUP
+# ===============================================
+
+type Query @rateLimit(limit: 60, duration: 60) {
+  groups: GroupQuery
+}
+
+type Mutation {
+  group: GroupMutation
+}
+
+# -----------------------------------------------
+# QUERIES
+# -----------------------------------------------
+
+type GroupQuery {
+  list(search: String, page: Int, limit: Int): GroupListResponse
+}
+
+# -----------------------------------------------
+# MUTATIONS
+# -----------------------------------------------
+
+type GroupMutation {
+  create(
+    # Kolom yang diperlukan untuk create
+    value: String!
+  ): GroupResponse
+}
+
+# -----------------------------------------------
+# RESPONSES
+# -----------------------------------------------
+
+type GroupListResponse {
+  data: [GroupMinimal]
+  pagination: PaginationInfo
+}
+
+type GroupResponse {
+  responseResult: ResponseStatus
+  group: GroupMinimal
+}
+
+# -----------------------------------------------
+# TYPES
+# -----------------------------------------------
+
+type GroupMinimal {
+  value: String!
+}

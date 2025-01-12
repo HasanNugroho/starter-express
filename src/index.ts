@@ -23,8 +23,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors(options));
 
 // Security
-app.use(helmet())
-app.use(securityMiddleware)
+// app.use(helmet())
+// app.use(securityMiddleware)
 
 // Error handling
 app.use(errorHandler);
