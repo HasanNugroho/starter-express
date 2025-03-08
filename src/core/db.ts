@@ -29,16 +29,26 @@ export class Database {
 
   async initDatabase(): Promise<void> {
     try {
-      await this.dataSource.initialize();
-      logger.info('Database connection established successfully.');
+      if (!this.dataSource.isInitialized) {
+        await this.dataSource.initialize();
+        logger.info('Database connection established successfully.');
+      }
     } catch (error) {
       if (error instanceof Error) {
-        logger.error(`Database Connection Error: ${error}`);
+        logger.error(`Database Connection Error: ${error.message}`);
         await this.retryInitialization();
       } else {
         logger.error('Unknown error during database initialization:', error);
         process.exit(1);
       }
+    }
+  }
+
+  // Fungsi untuk menutup koneksi database
+  async closeDatabaseConnection(): Promise<void> {
+    if (this.dataSource.isInitialized) {
+      await this.dataSource.destroy();  // Menutup koneksi dengan benar
+      logger.info('Database connection closed successfully.');
     }
   }
 }

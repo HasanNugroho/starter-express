@@ -27,7 +27,6 @@ export class UserDao {
   }
 
   async getAll(fields: (keyof User)[], search?: string, page: number = 1, limit: number = 10): Promise<[User[], number]> {
-    console.log(fields)
     let options: FindManyOptions<User> = {
       select: fields.reduce((acc, field) => {
         acc[field] = true;  // Set each field to true
