@@ -1,6 +1,6 @@
-import { DataSource, QueryFailedError } from 'typeorm';
+import { DataSource } from 'typeorm';
 import dotenv from 'dotenv';
-import dataSourceConfig from '../db/data-source';
+import dataSourceConfig from '../database/data-source';
 import logger from './logger';
 
 dotenv.config();

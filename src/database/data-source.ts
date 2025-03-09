@@ -17,13 +17,13 @@ let connectionOptions: DataSourceOptions = {
   entities: [
     path.join(
       __dirname,
-      isProduction ? '../dist/entities/*.entity.js' : '../entities/*.entity.ts'
+      isProduction ? '../entities/*.entity.js' : '../entities/*.entity.ts'
     ),
   ],
   migrations: [
     path.join(
       __dirname,
-      isProduction ? '../dist/db/migrations/*.js' : './migrations/*.ts'
+      isProduction ? '../db/migrations/*.js' : './migrations/*.ts'
     ),
   ],
   logging: true,
