@@ -18,8 +18,10 @@ export class Database {
   private async retryInitialization(): Promise<void> {
     if (this.conAttempts < this.maxAttempts) {
       this.conAttempts++;
-      logger.warn(`Retrying database connection in ${this.retryDelay / 1000} seconds... [Attempt ${this.conAttempts} of ${this.maxAttempts}]`);
-      await new Promise(resolve => setTimeout(resolve, this.retryDelay));
+      logger.warn(
+        `Retrying database connection in ${this.retryDelay / 1000} seconds... [Attempt ${this.conAttempts} of ${this.maxAttempts}]`
+      );
+      await new Promise((resolve) => setTimeout(resolve, this.retryDelay));
       await this.initDatabase();
     } else {
       logger.error('Max retry attempts reached. Exiting...');
@@ -47,7 +49,7 @@ export class Database {
   // Fungsi untuk menutup koneksi database
   async closeDatabaseConnection(): Promise<void> {
     if (this.dataSource.isInitialized) {
-      await this.dataSource.destroy();  // Menutup koneksi dengan benar
+      await this.dataSource.destroy(); // Menutup koneksi dengan benar
       logger.info('Database connection closed successfully.');
     }
   }

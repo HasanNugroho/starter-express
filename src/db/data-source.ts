@@ -15,13 +15,19 @@ let connectionOptions: DataSourceOptions = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   entities: [
-    path.join(__dirname, isProduction ? '../dist/entities/*.entity.js' : '../entities/*.entity.ts')
+    path.join(
+      __dirname,
+      isProduction ? '../dist/entities/*.entity.js' : '../entities/*.entity.ts'
+    ),
   ],
   migrations: [
-    path.join(__dirname, isProduction ? '../dist/db/migrations/*.js' : './migrations/*.ts')
+    path.join(
+      __dirname,
+      isProduction ? '../dist/db/migrations/*.js' : './migrations/*.ts'
+    ),
   ],
-  synchronize: false,
-  logging: !isProduction,
+  logging: true,
+  poolSize: Number(process.env.POOL_SIZE) || 10,
 };
 
 export default new DataSource({

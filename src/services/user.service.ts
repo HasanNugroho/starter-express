@@ -1,10 +1,12 @@
 import { User } from '../entities/user.entity';
 import { inject, injectable } from 'tsyringe';
-import { BadRequestError, NotFoundException } from '../common/errors';
-import { generatePagination } from '../common/pagination';
-import { ExtractedFields } from '../common/extractFields';
+import { BadRequestError, NotFoundException } from '../utilities/errors';
+import { ExtractedFields } from '../utilities/extractFields';
 import { UserInputRequest, UserUpdateRequest } from '../models/users.models';
 import { UserRepository } from '../repositories/users.repo';
+import { generatePagination } from '../utilities/response_model';
+import { HashPassword } from '../utilities/security';
+import logger from '../configs/logger';
 
 @injectable()
 export class UserService {
@@ -12,9 +14,12 @@ export class UserService {
 
   async create(input: UserInputRequest): Promise<User> {
     const existingUser = await this.userRepository.findByEmail(input.email);
-    if (existingUser) throw new BadRequestError('User with email already exists.');
+    if (existingUser)
+      throw new BadRequestError('User with email already exists.');
 
-    return this.userRepository.create(input);
+    input.password = await HashPassword(input.password)
+
+    return await this.userRepository.create(input);
   }
 
   async getById(id: string) {
@@ -25,8 +30,19 @@ export class UserService {
     return user;
   }
 
-  async getAll(fields: ExtractedFields<User>, search?: string, page: number = 1, limit: number = 10) {
-    const [users, total] = await this.userRepository.getAll(fields, search, page, limit);
+  async getAll(
+    fields: ExtractedFields<User>,
+    search?: string,
+    page: number = 1,
+    limit: number = 10
+  ) {
+
+    const [users, total] = await this.userRepository.getAll(
+      fields,
+      search,
+      page,
+      limit
+    );
 
     if (total === 0) throw new NotFoundException();
 
@@ -41,9 +57,9 @@ export class UserService {
       const existingUser = await this.userRepository.findById(input.id);
       if (!existingUser) throw new BadRequestError('User not exists.');
 
-      return this.userRepository.update(input.id, input);
+      return await this.userRepository.update(input.id, input);
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
@@ -52,9 +68,9 @@ export class UserService {
       const existingUser = await this.userRepository.findById(id);
       if (!existingUser) throw new BadRequestError('User not exists.');
 
-      return this.userRepository.delete(id);
+      return await this.userRepository.delete(id);
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 }

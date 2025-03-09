@@ -6,7 +6,8 @@ import { GraphQLSchema } from 'graphql';
 import { rateLimitDirective } from 'graphql-rate-limit-directive';
 
 // Destructure to get the type definitions and transformer
-const { rateLimitDirectiveTypeDefs, rateLimitDirectiveTransformer } = rateLimitDirective();
+const { rateLimitDirectiveTypeDefs, rateLimitDirectiveTransformer } =
+  rateLimitDirective();
 
 // Define your directories
 const schemaDir = path.join(__dirname, './schema');
@@ -21,8 +22,8 @@ const resolversArray = loadFilesSync(resolversDir, {
 });
 
 const typeDefs = mergeTypeDefs([
-  rateLimitDirectiveTypeDefs,  // Add rate limit directive type definitions
-  ...typesArray,               // Spread custom types
+  rateLimitDirectiveTypeDefs, // Add rate limit directive type definitions
+  ...typesArray, // Spread custom types
 ]);
 
 const resolvers = mergeResolvers(resolversArray);
@@ -33,4 +34,4 @@ let schema: GraphQLSchema = makeExecutableSchema({
 });
 schema = rateLimitDirectiveTransformer(schema);
 
-export default schema 
+export default schema;

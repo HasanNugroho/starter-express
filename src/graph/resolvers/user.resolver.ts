@@ -1,13 +1,14 @@
 import 'reflect-metadata';
 import { GraphQLResolveInfo } from 'graphql';
-import { generateError, generateSuccess } from '../../common/graph';
+import { generateError, generateSuccess } from '../../utilities/response_model';
 import { UserService } from '../../services/user.service';
 import { container } from 'tsyringe';
-import { validator } from '../../common/pipes/validation.pipe';
-import { BadRequestError, CustomError, ServerError } from '../../common/errors';
-import { extractFields } from '../../common/extractFields';
+import { validator } from '../../utilities/pipes/validation.pipe';
+import { BadRequestError, CustomError, ServerError } from '../../utilities/errors';
+import { extractFields } from '../../utilities/extractFields';
 import { User } from '../../entities/user.entity';
 import { UserInputRequest, UserUpdateRequest } from '../../models/users.models';
+import logger from '../../configs/logger';
 
 const userService = container.resolve(UserService);
 
@@ -21,42 +22,39 @@ const userResolvers = {
   UserQuery: {
     async list(
       _: any,
-      { search, page, limit }: { search?: string; page?: number; limit?: number },
+      {
+        search,
+        page,
+        limit,
+      }: { search?: string; page?: number; limit?: number },
       context: any,
       info: GraphQLResolveInfo
     ) {
       try {
         const fields = extractFields<User>(info);
-        const users = await userService.getAll(fields, search, page, limit);
-        return {
-          ...users,
-          responseResult: generateSuccess('fetch data(s) successfully'),
-
-        }
+        return await userService.getAll(fields, search, page, limit);
       } catch (error) {
-        return generateError(error instanceof CustomError ? error : new ServerError('An unexpected error occurred.'));
+        return generateError(
+          error instanceof CustomError
+            ? error
+            : new ServerError('An unexpected error occurred.')
+        );
       }
     },
-    async getOne(
-      _: any,
-      { id }: { id: string },
-    ) {
+    async getOne(_: any, { id }: { id: string }) {
       try {
-        const user = await userService.getById(id);
-        return {
-          user,
-          responseResult: generateSuccess('fetch data(s) successfully'),
-        }
+        return await userService.getById(id);
       } catch (error) {
-        return generateError(error instanceof CustomError ? error : new ServerError('An unexpected error occurred.'));
+        return generateError(
+          error instanceof CustomError
+            ? error
+            : new ServerError('An unexpected error occurred.')
+        );
       }
     },
   },
   UserMutation: {
-    async create(
-      _: any,
-      args: UserInputRequest,
-    ) {
+    async create(_: any, args: UserInputRequest) {
       try {
         // Validate input
         const { err, errors } = await validator(UserInputRequest, args);
@@ -69,13 +67,14 @@ const userResolvers = {
           responseResult: generateSuccess('User created successfully'),
         };
       } catch (error) {
-        return generateError(error instanceof CustomError ? error : new ServerError('An unexpected error occurred.'));
+        return generateError(
+          error instanceof CustomError
+            ? error
+            : new ServerError('An unexpected error occurred.')
+        );
       }
     },
-    async update(
-      _: any,
-      args: UserUpdateRequest,
-    ) {
+    async update(_: any, args: UserUpdateRequest) {
       try {
         // Validate input
         const { err, errors } = await validator(UserUpdateRequest, args);
@@ -87,13 +86,14 @@ const userResolvers = {
           responseResult: generateSuccess('User Update successfully'),
         };
       } catch (error) {
-        return generateError(error instanceof CustomError ? error : new ServerError('An unexpected error occurred.'));
+        return generateError(
+          error instanceof CustomError
+            ? error
+            : new ServerError('An unexpected error occurred.')
+        );
       }
     },
-    async delete(
-      _: any,
-      args: { id: string },
-    ) {
+    async delete(_: any, args: { id: string }) {
       try {
         await userService.delete(args.id);
 
@@ -101,7 +101,11 @@ const userResolvers = {
           responseResult: generateSuccess('User Deleted successfully'),
         };
       } catch (error) {
-        return generateError(error instanceof CustomError ? error : new ServerError('An unexpected error occurred.'));
+        return generateError(
+          error instanceof CustomError
+            ? error
+            : new ServerError('An unexpected error occurred.')
+        );
       }
     },
   },

@@ -1,10 +1,11 @@
 import { User } from '../entities/user.entity';
-import { FindManyOptions, FindOptionsSelect, ILike, Repository } from 'typeorm';
+import { FindManyOptions, ILike, Repository } from 'typeorm';
 import dataSourceConfig from '../db/data-source';
 import { autoInjectable } from 'tsyringe';
-import { buildSelectFields, ExtractedFields } from '../common/extractFields';
+import { buildSelectFields, ExtractedFields } from '../utilities/extractFields';
 import { UserInputRequest, UserUpdateRequest } from '../models/users.models';
-import { NotFoundException } from '../common/errors';
+import { NotFoundException } from '../utilities/errors';
+import logger from '../configs/logger';
 
 @autoInjectable()
 export class UserRepository {
@@ -16,31 +17,32 @@ export class UserRepository {
 
   async create(input: UserInputRequest): Promise<User> {
     const user = this.repository.create(input);
-    return this.repository.save(user);
+    return await this.repository.save(user);
   }
 
   async findById(id: string): Promise<User | null> {
-    return this.repository.findOne({ where: { id } });
+    return await this.repository.findOne({ where: { id } });
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.repository.findOne({ where: { email } });
+    return await this.repository.findOne({ where: { email } });
   }
 
-  async getAll(fields: ExtractedFields<User>, search?: string, page: number = 1, limit: number = 10): Promise<[User[], number]> {
+  async getAll(
+    fields: ExtractedFields<User>,
+    search?: string,
+    page: number = 1,
+    limit: number = 10
+  ): Promise<[User[], number]> {
     const options: FindManyOptions<User> = {
       select: buildSelectFields(fields.fields),
       take: limit,
       skip: (page - 1) * limit,
       where: search
-        ? [
-          { email: ILike(`%${search}%`) },
-          { name: ILike(`%${search}%`) },
-        ]
+        ? [{ email: ILike(`%${search}%`) }, { name: ILike(`%${search}%`) }]
         : undefined,
     };
-
-    return this.repository.findAndCount(options);
+    return await this.repository.findAndCount(options);
   }
 
   async update(id: string, payload: UserUpdateRequest) {
@@ -53,6 +55,6 @@ export class UserRepository {
   }
 
   async delete(id: string) {
-    return await this.repository.delete({ id })
+    return await this.repository.delete({ id });
   }
 }

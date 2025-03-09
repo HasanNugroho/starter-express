@@ -16,7 +16,7 @@ type Mutation {
 
 type UserQuery {
   list(search: String, page: Int, limit: Int): UserListResponse
-  getOne(id: ID): UserResponse
+  getOne(id: ID): UserMinimal
 }
 
 
@@ -28,7 +28,7 @@ type UserMutation {
   create(
     email: String!
     name: String!
-    password: String
+    password: String!
   ): UserResponse
   
   update(
@@ -50,7 +50,6 @@ type UserMutation {
 type UserListResponse {
   data: [UserMinimal]
   pagination: PaginationInfo
-  responseResult: ResponseStatus
 }
 
 type UserResponse {

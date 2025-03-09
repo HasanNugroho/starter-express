@@ -1,0 +1,46 @@
+# ===============================================
+# AUTH
+# ===============================================
+
+type Mutation {
+  auths: AuthMutation
+}
+
+# -----------------------------------------------
+# MUTATIONS
+# -----------------------------------------------
+
+type AuthMutation {
+  register(
+    email: String!
+    name: String!
+    password: String!
+  ): AuthResponse
+ 
+  login(
+    email: String!
+    password: String!
+  ): AuthResponse
+}
+
+# -----------------------------------------------
+# RESPONSES
+# -----------------------------------------------
+
+type AuthResponse {
+  data: AuthData
+  responseResult: ResponseStatus
+}
+
+# -----------------------------------------------
+# TYPES
+# -----------------------------------------------
+
+type AuthData {
+  id: ID
+  name: String
+  email: String
+  token: String!
+}
+
+scalar Date

@@ -6,7 +6,7 @@ import { FindOptionsSelect } from 'typeorm';
  * Interface representing the structure of extracted GraphQL fields.
  */
 export interface ExtractedFields<T> {
-    fields: (keyof T)[];
+  fields: (keyof T)[];
 }
 
 /**
@@ -14,8 +14,10 @@ export interface ExtractedFields<T> {
  * @param info - GraphQLResolveInfo from the resolver
  * @returns An object containing an array of requested field names
  */
-export const extractFields = <T>(info: GraphQLResolveInfo): ExtractedFields<T> => {
-    return { fields: fieldsList(info, { path: 'data' }) as (keyof T)[] };
+export const extractFields = <T>(
+  info: GraphQLResolveInfo
+): ExtractedFields<T> => {
+  return { fields: fieldsList(info, { path: 'data' }) as (keyof T)[] };
 };
 
 /**
@@ -23,6 +25,10 @@ export const extractFields = <T>(info: GraphQLResolveInfo): ExtractedFields<T> =
  * @param fields - Array of field names to be selected.
  * @returns TypeORM FindOptionsSelect object.
  */
-export const buildSelectFields = <T>(fields: (keyof T)[]): FindOptionsSelect<T> => {
-    return Object.fromEntries(fields.map((field) => [field, true])) as FindOptionsSelect<T>;
+export const buildSelectFields = <T>(
+  fields: (keyof T)[]
+): FindOptionsSelect<T> => {
+  return Object.fromEntries(
+    fields.map((field) => [field, true])
+  ) as FindOptionsSelect<T>;
 };

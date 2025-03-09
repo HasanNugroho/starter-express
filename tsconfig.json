@@ -21,9 +21,10 @@
   },
   "include": [
     "src/**/*.ts",
-    "generate-module.ts"
+    "src/**/*.graphql"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "generate-module.ts"
   ]
 }

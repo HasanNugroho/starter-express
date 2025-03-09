@@ -9,8 +9,8 @@ const logFormat = winston.format.combine(
   winston.format.colorize(),
   winston.format.timestamp(),
   winston.format.json(),
-  winston.format.printf(({ timestamp, level, message }) => 
-    `${timestamp} [${level}]: ${message}`
+  winston.format.printf(
+    ({ timestamp, level, message }) => `${timestamp} [${level}]: ${message}`
   )
 );
 
@@ -23,7 +23,7 @@ const logger = winston.createLogger({
   transports: [
     new winston.transports.Console({
       level: logLevel,
-    })
+    }),
   ],
 });
 

@@ -2,11 +2,11 @@ import 'reflect-metadata';
 import express, { NextFunction } from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
-import { startServer } from './server';
-import { Database } from './configs/db';
+import { startServer } from './configs/server';
+import { Database } from './configs/database';
 import { errorHandler } from './middleware/errors.middleware';
 import cors from 'cors';
-import { options } from './common/cors';
+import { options } from './configs/cors';
 import { securityMiddleware } from './middleware/security.middleware';
 import helmet from 'helmet';
 
