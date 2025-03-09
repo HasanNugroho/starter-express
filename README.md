@@ -10,27 +10,50 @@ Typescript backend template with express and graphql
 - Typeorm : https://github.com/typeorm/typeorm
 - Winston : https://github.com/winstonjs/winston
 
-### Development & Build
-- `npm run dev` → Starts the server in development mode with hot-reloading.
-- `npm run build` → Compiles TypeScript into JavaScript.
-- `npm run start` → Runs the compiled server in production.
+## Run Application
 
-### Database Migrations (TypeORM)
+### Development mode 
+Starts the server in development mode with hot-reloading.
+
+```bash
+npm run dev
+```
+
+### Build 
+Compiles TypeScript into JavaScript.
+
+```bash
+npm run build
+```
+
+### Run 
+Runs the compiled server in production.
+
+```bash
+npm run start
+```
+
+## Database Migrations (TypeORM)
 - `make migration-create name=MIGRATION_NAME` → Creates a new empty migration file.
 - `make migration-generate` → Generates a migration based on entity changes.
 - `make migration-show` → Lists all pending migrations.
 - `make migration-run` → Runs all pending migrations.
 - `make migration-revert` → Reverts the last applied migration.
 
-### Database Utilities
+## Database Utilities
 - `npm run schema:sync` → Syncs database schema directly from entities (not recommended for production).
 - `npm run schema:drop` → Deletes all tables and data from the database.
 - `npm run typeorm:cache` → Clears cached database queries.
 
-### Code Formatting & Linting
-- `npm run prettier` → Formats all TypeScript and JSON files.
+## Code Formatting & Linting
+Formats all TypeScript and JSON files.
+```shell
+npm run prettier
+```
   
-### Other Utilities
-- `npm run generate:module` → Creates a new module based on project structure.
+## Other Utilities
+Creates a new module based on project structure.
+```shell 
+npm run generate:module MODULE_NAME
+```
 
-This guide provides a **concise overview** of the most commonly used commands for **development, database migrations, and code formatting.** 🚀
