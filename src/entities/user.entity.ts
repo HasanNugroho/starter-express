@@ -27,7 +27,7 @@ export class User {
   @Column({ type: 'boolean', default: true })
   is_active!: boolean;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @Column({ type: 'timestamp' })
   last_login_at!: Date;
 
   @CreateDateColumn({ type: 'timestamp' })

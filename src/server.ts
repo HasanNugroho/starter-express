@@ -1,9 +1,9 @@
 import { Express } from 'express';
 import http from 'http';
 import cors from 'cors';
-import logger from './core/logger';
+import logger from './configs/logger';
 import bodyParser from 'body-parser';
-import redisClient from './core/redis';
+import redisClient from './configs/redis';
 import schema from './graph';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
