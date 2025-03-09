@@ -16,6 +16,7 @@ type Mutation {
 
 type UserQuery {
   list(search: String, page: Int, limit: Int): UserListResponse
+  getOne(id: ID): UserResponse
 }
 
 
@@ -29,6 +30,17 @@ type UserMutation {
     name: String!
     password: String
   ): UserResponse
+  
+  update(
+    id: ID!
+    email: String
+    name: String
+    password: String
+  ): DefaultResponse
+  
+  delete(
+    id: ID!
+  ): DefaultResponse
 }
 
 # -----------------------------------------------
@@ -38,13 +50,13 @@ type UserMutation {
 type UserListResponse {
   data: [UserMinimal]
   pagination: PaginationInfo
+  responseResult: ResponseStatus
 }
 
 type UserResponse {
-  responseResult: ResponseStatus,
   user: UserMinimal
+  responseResult: ResponseStatus
 }
-
 
 # -----------------------------------------------
 # TYPES

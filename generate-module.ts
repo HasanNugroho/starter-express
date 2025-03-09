@@ -172,7 +172,7 @@ type ${className}Minimal {
     console.log(`service '${moduleName}' already exists.`);
     return;
   }
-  const serviceContent = `import { ${className}Dao } from '../dao/${moduleName}s.dao';
+  const serviceContent = `import { ${className}Repository } from '../repositories/${moduleName}s.repo';
 import { ${className} } from '../entities/${moduleName}.entity';
 import { inject, injectable } from 'tsyringe';
 import { BadRequestError, NotFoundException } from '../common/errors';
@@ -180,39 +180,39 @@ import { generatePagination } from '../common/pagination';
 
 @injectable()
 export class ${className}Service {
-  constructor(@inject(${className}Dao) private ${moduleName}Dao: ${className}Dao) { }
+  constructor(@inject(${className}Repository) private ${moduleName}Repository: ${className}Repository) { }
 
   // your code
 }`;
   createFile(servicePath, serviceContent);
 
   // 
-  // DAO
+  // Repository
   // 
 
-  // 5. Konten untuk file ${moduleName}.dao.ts (Dao untuk TypeORM)
-  const daoPath = path.join(basePath, 'dao', `${moduleName}s.dao.ts`)
-  if (fs.existsSync(daoPath)) {
-    console.log(`Dao '${moduleName}' already exists.`);
+  // 5. Konten untuk file ${moduleName}.repo.ts (Repo untuk TypeORM)
+  const repoPath = path.join(basePath, 'repositories', `${moduleName}s.repo.ts`)
+  if (fs.existsSync(repoPath)) {
+    console.log(`Repository '${moduleName}' already exists.`);
     return;
   }
 
-  const daoContent = `import { ${className} } from '../entities/${moduleName}.entity';
+  const repoContent = `import { ${className} } from '../entities/${moduleName}.entity';
 import { Repository } from 'typeorm';
 import dataSourceConfig from '../db/data-source';
 import { autoInjectable } from 'tsyringe';
 
 @autoInjectable()
-export class ${className}Dao {
-  private ${moduleName}Repository: Repository<${className}>;
+export class ${className}Repository {
+  private repository: Repository<${className}>;
 
   constructor() {
-    this.${moduleName}Repository = dataSourceConfig.getRepository(${className});
+    this.repository = dataSourceConfig.getRepository(${className});
   }
 
   // your code
 }`;
-  createFile(daoPath, daoContent);
+  createFile(repoPath, repoContent);
 
 }
 

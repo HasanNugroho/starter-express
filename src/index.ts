@@ -3,10 +3,10 @@ import express, { NextFunction } from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import { startServer } from './server';
-import { Database } from './core/db';
+import { Database } from './configs/db';
 import { errorHandler } from './middleware/errors.middleware';
 import cors from 'cors';
-import { options } from './core/cors';
+import { options } from './common/cors';
 import { securityMiddleware } from './middleware/security.middleware';
 import helmet from 'helmet';
 

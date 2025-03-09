@@ -2,11 +2,12 @@ import { Exclude } from 'class-transformer';
 import {
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsString,
   IsStrongPassword,
 } from 'class-validator';
 
-export class UserMinimalDTO {
+export class UserInputRequest {
   @IsString()
   @IsNotEmpty()
   name!: string;
@@ -18,4 +19,22 @@ export class UserMinimalDTO {
   @IsStrongPassword()
   @IsNotEmpty()
   password!: string;
+}
+
+export class UserUpdateRequest {
+  @IsString()
+  @IsNotEmpty()
+  id!: string;
+
+  @IsString()
+  @IsOptional()
+  name?: string;
+
+  @IsEmail()
+  @IsOptional()
+  email?: string;
+
+  @IsStrongPassword()
+  @IsOptional()
+  password?: string;
 }
