@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp -r ./src/graph/schema ./dist/graph/schema",
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
     "prettier": "prettier --write 'src/**/*.ts' 'src/**/*.json'",
