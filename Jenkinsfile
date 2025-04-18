@@ -2,11 +2,11 @@ pipeline {
   agent any
 
   environment {
-    APP_NAME = "starter-express"
-    IMAGE_NAME = "skyhas/starter-express:latest"
+    IMAGE_NAME = "skyhas/starter-express"
     NEW_CONTAINER = "starter-express-new"
     OLD_CONTAINER = "starter-express"
-    APP_PORT = "5000"
+    registryCredential = 'dockerhub_id'
+    dockerImage = ''
   }
 
   stages {
@@ -30,13 +30,17 @@ pipeline {
 
     stage('Build Docker Image') {
       steps {
-        sh "docker build -t $IMAGE_NAME ."
+        dockerImage = docker.build("${IMAGE_NAME}:${BUILD_NUMBER}")
       }
     }
   
     stage('Push Docker Image') {
       steps {
-        sh "docker push $IMAGE_NAME ."
+        script{
+          docker.withRegistry('', registryCredential) {
+              dockerImage.push()  
+          }
+        }
       }
     }
 
@@ -67,3 +71,4 @@ pipeline {
     // }
   }
 }
+
