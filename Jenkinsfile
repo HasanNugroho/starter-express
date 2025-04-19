@@ -28,6 +28,12 @@ pipeline {
         sh 'npm run test -- --passWithNoTests'
       }
     }
+    
+    stage('Run Build') {
+      steps {
+        sh 'npm run build'
+      }
+    }
 
     stage('Build Docker Image') {
       steps {
@@ -54,12 +60,12 @@ pipeline {
       steps {
          withCredentials([file(credentialsId: 'starterenv', variable: 'ENV_FILE')]) {
           script {
-            // Copy .env file to workspace
-            sh 'cp $ENV_FILE .env'
+            // // Copy .env file to workspace
+          // sh 'cp $ENV_FILE .env'
 
             // Run docker-compose up
-            sh 'export $(cat .env | xargs) && docker-compose down || true'
-            sh 'export $(cat .env | xargs) && docker-compose up -d --build'
+            sh 'docker-compose down || true'
+            sh 'docker-compose --env-file=$ENV_FILE up -d --build'
           }
         }
       }

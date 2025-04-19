@@ -1,12 +1,10 @@
-version: "3.8"
-
 services:
   appsS:
     image: skyhas/starter-express:latest
     container_name: starter-express
     restart: unless-stopped
     ports:
-      - "${PORT}:${PORT}"  # Akan diekspansi dari file .env
+      - "${PORT}:${PORT}"
     environment:
       - DB_TYPE=${DB_TYPE}
       - DB_HOST=${DB_HOST}
