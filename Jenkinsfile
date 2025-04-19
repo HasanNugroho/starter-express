@@ -5,11 +5,13 @@ pipeline {
     IMAGE_NAME = "skyhas/starter-express"
     NEW_CONTAINER = "starter-express-new"
     OLD_CONTAINER = "starter-express"
+    PORT = "5005"
     registryCredential = 'dockerhub_id'
     dockerImage = ''
   }
 
   stages {
+
     stage('Checkout') {
       steps {
         git 'https://github.com/HasanNugroho/starter-express.git'
@@ -31,46 +33,69 @@ pipeline {
     stage('Build Docker Image') {
       steps {
         script {
-          dockerImage = docker.build("${IMAGE_NAME}:${BUILD_NUMBER}")
+          dockerImage = docker.build("${IMAGE_NAME}:latest")
         }
       }
     }
-  
+
+    stage('Generate .env from Jenkins Credentials') {
+      steps {
+        withCredentials([file(credentialsId: 'starterenv', variable: 'ENV_FILE')]) {
+          sh """
+            docker stop ${OLD_CONTAINER} || true
+            docker rm ${OLD_CONTAINER} || true
+            docker run -d --name ${OLD_CONTAINER} \\
+              -p ${PORT}:${PORT} \\
+              --env-file \$ENV_FILE \\
+              --network docker_default \\
+              ${IMAGE_NAME}:latest
+          """
+        }
+      }
+    }
+
+    stage('Docker Compose Up') {
+      steps {
+        sh 'docker-compose up -d --build'
+      }
+    }
+
+    // Optional: Uncomment to push image
+    /*
     stage('Push Docker Image') {
       steps {
-        script{
+        script {
           docker.withRegistry('', registryCredential) {
-              dockerImage.push()  
+            dockerImage.push()
           }
         }
       }
     }
+    */
 
-    // stage('Run New Container') {
-    //   steps {
-    //     script {
-    //       sh """
-    //         docker run -d --name $NEW_CONTAINER -p 5001:$APP_PORT --env-file .env $IMAGE_NAME
+    stage('Run Container') {
+      steps {
+        script {
+          sh """
+            docker stop ${OLD_CONTAINER} || true
+            docker rm ${OLD_CONTAINER} || true
+            source .env
+            docker run -d --name ${OLD_CONTAINER} \\
+              -p \$PORT:\$PORT \\
+              --env-file .env \\
+              --network docker_default \\
+              ${IMAGE_NAME}:latest
+          """
+        }
+      }
+    }
 
-    //         echo "Waiting for the new container to be ready..."
-    //         sleep 5
-
-    //         NEW_CONTAINER_HEALTH=\$(docker inspect --format='{{.State.Running}}' $NEW_CONTAINER || echo 'false')
-
-    //         if [ "\$NEW_CONTAINER_HEALTH" = "true" ]; then
-    //           echo "New container is running. Switching..."
-    //           docker stop $OLD_CONTAINER || true
-    //           docker rm $OLD_CONTAINER || true
-    //           docker rename $NEW_CONTAINER $OLD_CONTAINER
-    //         else
-    //           echo "❌ New container failed to start. Aborting..."
-    //           docker rm -f $NEW_CONTAINER
-    //           exit 1
-    //         fi
-    //       """
-    //     }
-    //   }
-    // }
+    stage('Clean Up Docker') {
+      steps {
+        script {
+          sh "docker rmi ${IMAGE_NAME}:latest || true"
+        }
+      }
+    }
   }
 }
-

@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  appsS:
+    image: skyhas/starter-express:latest
+    restart: unless-stopped
+    ports:
+      - 5002:5002
+    env_file:
+      - .env
+    networks:
+      - docker_default
+
+networks:
+  docker_default:
+    external: true
