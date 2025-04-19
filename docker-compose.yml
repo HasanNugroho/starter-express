@@ -1,11 +1,9 @@
-version: '3.8'
-
 services:
   appsS:
     image: skyhas/starter-express:latest
     restart: unless-stopped
     ports:
-      - 5002:5002
+      - ${PORT}:${PORT} 
     env_file:
       - .env
     networks:

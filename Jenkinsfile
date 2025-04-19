@@ -38,28 +38,6 @@ pipeline {
       }
     }
 
-    stage('Generate .env from Jenkins Credentials') {
-      steps {
-        withCredentials([file(credentialsId: 'starterenv', variable: 'ENV_FILE')]) {
-          sh """
-            docker stop ${OLD_CONTAINER} || true
-            docker rm ${OLD_CONTAINER} || true
-            docker run -d --name ${OLD_CONTAINER} \\
-              -p ${PORT}:${PORT} \\
-              --env-file \$ENV_FILE \\
-              --network docker_default \\
-              ${IMAGE_NAME}:latest
-          """
-        }
-      }
-    }
-
-    stage('Docker Compose Up') {
-      steps {
-        sh 'docker-compose up -d --build'
-      }
-    }
-
     // Optional: Uncomment to push image
     /*
     stage('Push Docker Image') {
@@ -75,17 +53,15 @@ pipeline {
 
     stage('Run Container') {
       steps {
-        script {
-          sh """
-            docker stop ${OLD_CONTAINER} || true
-            docker rm ${OLD_CONTAINER} || true
-            source .env
-            docker run -d --name ${OLD_CONTAINER} \\
-              -p \$PORT:\$PORT \\
-              --env-file .env \\
-              --network docker_default \\
-              ${IMAGE_NAME}:latest
-          """
+         withCredentials([file(credentialsId: 'starterenv', variable: 'ENV_FILE')]) {
+          script {
+            // Copy .env file to workspace
+            sh 'cp $ENV_FILE .env'
+
+            // Run docker-compose up
+            sh 'docker-compose down || true'
+            sh 'docker-compose up -d --build'
+          }
         }
       }
     }
