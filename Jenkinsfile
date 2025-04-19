@@ -5,7 +5,6 @@ pipeline {
     IMAGE_NAME = "skyhas/starter-express"
     NEW_CONTAINER = "starter-express-new"
     OLD_CONTAINER = "starter-express"
-    PORT = "5005"
     registryCredential = 'dockerhub_id'
     dockerImage = ''
   }
@@ -59,8 +58,8 @@ pipeline {
             sh 'cp $ENV_FILE .env'
 
             // Run docker-compose up
-            sh 'docker-compose down || true'
-            sh 'docker-compose up -d --build'
+            sh 'export $(cat .env | xargs) && docker-compose down || true'
+            sh 'export $(cat .env | xargs) && docker-compose up -d --build'
           }
         }
       }

@@ -1,11 +1,30 @@
+version: "3.8"
+
 services:
   appsS:
     image: skyhas/starter-express:latest
+    container_name: starter-express
     restart: unless-stopped
     ports:
-      - ${PORT}:${PORT} 
-    env_file:
-      - .env
+      - "${PORT}:${PORT}"  # Akan diekspansi dari file .env
+    environment:
+      - DB_TYPE=${DB_TYPE}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - LOG_FORMAT=${LOG_FORMAT}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - HOST=${HOST}
+      - PORT=${PORT}
+      - GRAPHQL_PORT=${GRAPHQL_PORT}
+      - IFRAME=${IFRAME}
+      - REFERRER_POLICY=${REFERRER_POLICY}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
     networks:
       - docker_default
 
